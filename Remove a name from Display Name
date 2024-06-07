@@ -1,0 +1,18 @@
+Get-ADUser -Filter 'displayname -like "*(Share)*"' -Properties Displayname | %{$newDN = $_.displayname -replace " \(share\)","";Set-ADUser $_.name -DisplayName $newDN -PassThru}
+
+or
+
+# Fetch the list of Active Directory users whose display names contain the string "(Share)"
+$removeDisplayName = Get-ADUser -Filter "Displayname -like '*(Share)'" -Properties displayname
+
+# Process each user in the list
+$removeDisplayName | %{
+    # Remove the substring " (share)" from the display name
+    $NDN = $_.displayname -replace " \(share\)$",''
+    
+    # Output the new display name to the console for verification
+    Write-Output $NDN
+    
+    # Update the user's display name in Active Directory with the new display name
+    Set-ADUser $_.name -DisplayName $NDN -PassThru
+}

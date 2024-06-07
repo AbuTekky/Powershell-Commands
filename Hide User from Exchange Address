@@ -1,0 +1,3 @@
+Set-ADUser HAMLINC -clear msExchHideFromAddressLists
+ 
+Set-ADUser HAMLINC -Add @{msExchHideFromAddressLists=$true}
