@@ -1,0 +1,1 @@
+Get-ADUser -Filter 'displayname -like "*(Share)*"' -Properties Displayname | %{$newDN = $_.displayname -replace " \(share\)","";Set-ADUser $_.name -DisplayName $newDN -PassThru}
