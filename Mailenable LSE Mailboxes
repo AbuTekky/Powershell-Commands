@@ -1,0 +1,27 @@
+Function MailEnable {
+    param (
+        [string]$ACLGroupName,
+        [string]$ROLEGroupName
+    )
+    
+    # Store variables
+    $emailDomain = "@lse.ac.uk"
+    $aclEmail = "MBSG__$ACLGroupName$emailDomain"
+    $roleEmail = "MBSG__$ROLEGroupName$emailDomain"
+
+    # Update email attributes for ACL group
+    Set-ADGroup -Identity $ACLGroupName -Replace @{mail=$aclEmail}
+
+    # Update email attributes for ROLE group
+    Set-ADGroup -Identity $ROLEGroupName -Replace @{mail=$roleEmail}
+
+    # Update the proxyAddresses attribute for ACL group
+    Set-ADGroup -Identity $ACLGroupName -Add @{proxyAddresses="SMTP:$aclEmail"}
+
+    # Update the proxyAddresses attribute for ROLE group
+    Set-ADGroup -Identity $ROLEGroupName -Add @{proxyAddresses="SMTP:$roleEmail"}
+}
+
+# Usage example
+MailEnable -ACLGroupName "ACL__Law-Law.Finance__MBX__FULL" -ROLEGroupName "Role__Law-Law.Finance-MBX"
+
