@@ -1,1 +1,10 @@
 Get-ADUser -Filter 'displayname -like "*(Share)*"' -Properties Displayname | %{$newDN = $_.displayname -replace " \(share\)","";Set-ADUser $_.name -DisplayName $newDN -PassThru}
+
+or
+
+$removeDisplayName = Get-ADUser -Filter "Displayname -like '*(Share)'" -Properties displayname
+$removeDisplayName | %{
+    $NDN = $_.displayname -replace " \(share\)$",''
+    Write-Output $NDN
+    Set-ADUser $_.name -DisplayName $NDN -PassThru
+}
