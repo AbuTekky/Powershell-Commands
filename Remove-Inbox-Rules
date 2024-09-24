@@ -1,0 +1,19 @@
+# Check for All Inbox Rules:
+Get-InboxRule -Mailbox "user@lse.ac.uk"
+
+# Check for Enabled Forwarding Rules:
+Get-InboxRule -Mailbox "user@lse.ac.uk" | Where-Object { ($_.ForwardTo -ne $null -or $_.RedirectTo -ne $null) -and $_.Enabled -eq $true }
+
+# Check Server-Level Forwarding Settings:
+Get-Mailbox -Identity "user@lse.ac.uk" | Select-Object ForwardingAddress, ForwardingSMTPAddress, DeliverToMailboxAndForward
+
+# If You Find Enabled Rules, disable them via
+Get-InboxRule -Mailbox "user@lse.ac.uk" | Where-Object { $_.ForwardTo -ne $null -or $_.RedirectTo -ne $null } | Disable-InboxRule
+
+# Disable all inbox rules
+
+#All inbox rules, including any that automatically forward or redirect emails, will be disabled.
+#Disabled rules will still exist in the user's mailbox, but they will not be active or executed.
+# If the user had rules to forward or redirect emails, they will no longer function.
+
+Get-InboxRule -Mailbox "D.K.Jaggi@lse.ac.uk" | Disable-InboxRule
